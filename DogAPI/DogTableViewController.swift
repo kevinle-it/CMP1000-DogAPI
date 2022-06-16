@@ -57,7 +57,25 @@ class DogTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "dogbreed", for: indexPath)
 
         // Configure the cell...
-        cell.textLabel?.text = dogBreeds[indexPath.row][0]
+        let mainBreed = dogBreeds[indexPath.row][0]
+        if dogBreeds[indexPath.row].count < 2 {
+            cell.textLabel?.text = mainBreed
+        } else {
+            let curBreeds = dogBreeds[indexPath.row]
+            let from1 = curBreeds.index(after: curBreeds.startIndex)
+            let toEnd = curBreeds.endIndex
+            let subBreeds = curBreeds[from1..<toEnd].map { String($0) }
+                .joined(separator: ", ")
+            
+            let breedsToShow = "\(mainBreed): \(subBreeds)"
+            let myMutableString = NSMutableAttributedString(string: breedsToShow)
+            myMutableString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: UIColor.gray,
+                range: NSRange(location:mainBreed.count + 2,length:subBreeds.count)
+            )
+            cell.textLabel?.attributedText = myMutableString
+        }
 
         return cell
     }
